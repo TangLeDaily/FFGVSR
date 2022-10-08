@@ -16,7 +16,7 @@ model = EDVR()
 
 parser = argparse.ArgumentParser(description="PyTorch Data_Pre")
 # wandb and project
-parser.add_argument("--use_wandb", default=True, action="store_true")
+parser.add_argument("--use_wandb", default=False, action="store_true")
 parser.add_argument("--Project_name", default="SPVSR_V5", type=str) # wandb Project name
 parser.add_argument("--This_name", default="B_EDVR_DB_L5", type=str) # wandb run name & model save name path
 parser.add_argument("--wandb_username", default="tangle", type=str)
@@ -156,7 +156,7 @@ def test_train_set(this_model, test_loader_sum, epoch_num):
                 ssim.update(cal_ssim_tensor(out[0, :, :, :], target[0, :, :, :]), len(out))
             if opt.use_wandb:
                 wandb.log({'psnr{}'.format(iii+1): psnr.avg, 'ssim{}'.format(iii+1): ssim.avg})
-            print("--->This--{}--epoch:{}--Avg--PSNR: {:.4f} dB -- SSIM :{}--Dir: {}".format(This_name, epoch_num, psnr.avg, ssim.avg, iii+1))
+            print("--->This--{}--epoch:{}--Avg--PSNR: {:.4f} dB -- SSIM :{}--Dir: {}".format(opt.This_name, epoch_num, psnr.avg, ssim.avg, iii+1))
             psnr_sum += psnr.avg
             ssim_sum += ssim.avg
     print(" -- Sum PSNR: {:.4f} -- ".format(psnr_sum/4.))
