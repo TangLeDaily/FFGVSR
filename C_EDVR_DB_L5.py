@@ -16,7 +16,7 @@ model = EDVR()
 
 parser = argparse.ArgumentParser(description="PyTorch Data_Pre")
 # wandb and project
-parser.add_argument("--use_wandb", default=False, action="store_true")
+parser.add_argument("--use_wandb", default=True, action="store_true")
 parser.add_argument("--Project_name", default="SPVSR_V5", type=str) # wandb Project name
 parser.add_argument("--This_name", default="B_EDVR_DB_L5", type=str) # wandb run name & model save name path
 parser.add_argument("--wandb_username", default="tangle", type=str)
@@ -63,9 +63,7 @@ def main():
 
     print("===> Loading datasets")
 
-    train_set = train_data_set(opt.train_root_path, batchsize=opt.batchSize)
-    train_dataloader = DataLoader(dataset=train_set, batch_size=opt.batchSize, num_workers=opt.threads,
-                                  drop_last=True)
+
 
     test_set_1 = test_data_set(opt.test_root_path, "000/")
     test_loader_1 = DataLoader(dataset=test_set_1, batch_size=1, num_workers=0)
@@ -101,7 +99,7 @@ def main():
     print("===> Training")
     for epoch in range(opt.start_epoch, opt.max_epoch + 1):
         # 训练
-        train(optimizer, model, criterion, epoch, train_dataloader)
+        train(optimizer, model, criterion, epoch)
         # 测试和保存
         if (epoch+1) % opt.test_save_epoch == 0:
             psnr = test_train_set(model, test_loader_sum, epoch)
@@ -111,8 +109,11 @@ def main():
             for p in optimizer.param_groups:
                 p['lr'] *= opt.decay_loss_ratio
 
-def train(optimizer, model, criterion, epoch, train_dataloader):
+def train(optimizer, model, criterion, epoch):
     global opt
+    train_set = train_data_set(opt.train_root_path, batchsize=opt.batchSize)
+    train_dataloader = DataLoader(dataset=train_set, batch_size=opt.batchSize, num_workers=opt.threads,
+                                  drop_last=True)
     print("Epoch={}, lr={}".format(epoch, optimizer.param_groups[0]["lr"]))
     model.train()
     avg_loss = AverageMeter()
