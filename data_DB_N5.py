@@ -91,12 +91,28 @@ class train_data_set(data.Dataset):
             video_real_ID = video_real_ID - 236
         lrC = self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[frame]))
         lrN = []
-        if frame < 4:
-            for i in range(4):
-                lrN.append(self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[i])))
+
+        if frame < 2:
+            for i in range(5):
+                if i != frame:
+                    lrN.append(self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[i])))
+        elif frame > len(self.pic_name_lis) - 3:
+            for i_b in range(5):
+                if len(self.pic_name_lis) - i_b - 1 != frame:
+                    lrN.append(self.transLR(load_img(
+                        self.input_path_ls[video_real_ID] + self.pic_name_lis[len(self.pic_name_lis) - i_b - 1])))
         else:
-            for i in range(4, 0, -1):
-                lrN.append(self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[frame - i])))
+            for i_r in range(2):
+                lrN.append(
+                    self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[frame - i_r - 1])))
+                lrN.append(
+                    self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[frame + i_r + 1])))
+        # if frame < 4:
+        #     for i in range(4):
+        #         lrN.append(self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[i])))
+        # else:
+        #     for i in range(4, 0, -1):
+        #         lrN.append(self.transLR(load_img(self.input_path_ls[video_real_ID] + self.pic_name_lis[frame - i])))
         hr = self.transHR(load_img(self.target_path_ls[video_real_ID] + self.pic_name_lis[frame]))
         sample = {'lrC': lrC, 'lrN': lrN, 'hr': hr, 'ranintX': self.randintX[video_real_ID], 'ranintY': self.randintY[video_real_ID]}
         lrCC, lrNN, hrr = self.crop(sample)
@@ -127,12 +143,21 @@ class test_data_set(data.Dataset):
         lrc = self.transLR(load_img(self.input_path + self.pic_name_lis[idx]))
         lrN = []
         frame = idx
-        if idx < 4:
-            for i in range(4):
-                lrN.append(self.transLR(load_img(self.input_path + self.pic_name_lis[i])))
+        if frame < 2:
+            for i in range(5):
+                if i != frame:
+                    lrN.append(self.transLR(load_img(self.input_path + self.pic_name_lis[i])))
+        elif frame > len(self.pic_name_lis) - 3:
+            for i_b in range(5):
+                if len(self.pic_name_lis) - i_b - 1 != frame:
+                    lrN.append(self.transLR(load_img(
+                        self.input_path + self.pic_name_lis[len(self.pic_name_lis) - i_b - 1])))
         else:
-            for i in range(4, 0, -1):
-                lrN.append(self.transLR(load_img(self.input_path + self.pic_name_lis[idx - i])))
+            for i_r in range(2):
+                lrN.append(
+                    self.transLR(load_img(self.input_path + self.pic_name_lis[frame - i_r - 1])))
+                lrN.append(
+                    self.transLR(load_img(self.input_path + self.pic_name_lis[frame + i_r + 1])))
         hr = self.transHR(load_img(self.target_path + self.pic_name_lis[idx]))
         lr_final  = []
         lr_final.append(lrc)

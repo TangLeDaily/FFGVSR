@@ -37,6 +37,7 @@ class PredeblurModule(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
     def forward(self, x):
+
         feat_l1 = self.lrelu(self.conv_first(x))
         if self.hr_in:
             feat_l1 = self.lrelu(self.stride_conv_hr1(feat_l1))

@@ -7,7 +7,7 @@ import os
 import random
 from torch import optim
 
-from data_DB_L5 import *
+from data_DB_N5 import *
 from util import *
 
 # model name
@@ -78,8 +78,6 @@ def main():
 
     print("===> Loading datasets")
 
-
-
     test_set_1 = test_data_set(opt.test_root_path, "000/")
     test_loader_1 = DataLoader(dataset=test_set_1, batch_size=1, num_workers=0)
     test_set_2 = test_data_set(opt.test_root_path, "011/")
@@ -106,7 +104,7 @@ def main():
         criterion = criterion.cuda()
 
     print("===> Do Resume Or Skip")
-    model = get_noTSA(model)
+    # model = get_noTSA(model)
     # "/home/tangle/code/FGVSR/checkpoints/state/EDVR_M_x4_SR_REDS_official-32075921.pth"
     # model = get_yu(model, "checkpoints/over/TSALSTM_ATD/model_epoch_212_psnr_27.3702.pth")
 
